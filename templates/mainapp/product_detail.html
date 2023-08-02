@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+
+            <style type="text/css">
+        
+                #content-wrapper{
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                    align-items: center;
+                }
+        
+                .column{
+                    width: 600px;
+                    padding: 10px;
+        
+                }
+        
+                #featured{
+                    max-width: 500px;
+                    max-height: 600px;
+                    object-fit: cover;
+                    cursor: pointer;
+                    border: 2px solid black;
+        
+                }
+        
+        
+        
+                .thumbnail{
+                    object-fit: cover;
+                    max-width: 180px;
+                    max-height: 100px;
+                    cursor: pointer;
+                    opacity: 0.5;
+                    margin: 5px;
+                    border: 2px solid black;
+        
+                }
+        
+                .thumbnail:hover{
+                    opacity:1;
+                }
+        
+                .active{
+                    opacity: 1;
+                }
+        
+                #slide-wrapper{
+                    max-width: 500px;
+                    display: flex;
+                    min-height: 100px;
+                    align-items: center;
+                }
+        
+                #slider{
+                    width: 440px;
+                    display: flex;
+                    flex-wrap: nowrap;
+                    overflow-x: hidden;
+        
+                }
+        
+                #slider{
+                    width: 440px;
+                    display: flex;
+                    flex-wrap: nowrap;
+                    overflow-x: hidden;
+        
+        
+                }
+        
+                #slider::-webkit-scrollbar {
+                    width: 8px;
+        
+                }
+        
+                #slider::-webkit-scrollbar-track {
+                    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        
+                }
+                 
+                #slider::-webkit-scrollbar-thumb {
+                  background-color: #dede2e;
+                  outline: 1px solid slategrey;
+                    border-radius: 100px;
+        
+                }
+        
+                #slider::-webkit-scrollbar-thumb:hover{
+                    background-color: #18b5ce;
+                }
+        
+                
+        
+                .arrow{
+                    width: 30px;
+                    height: 30px;
+                    cursor: pointer;
+                    transition: .3s;
+                }
+        
+                .arrow:hover{
+                    opacity: .5;
+                    width: 35px;
+                    height: 35px;
+                }
+        
+                
+            </style> 
+
+            <div id="content-wrapper">
+                <div class="column">
+                    <img id="featured" src="{{ phone.image.url }}">
+
+                <div id="slide-wrapper">
+                    <img id="slideLeft" class="arrow" src="{% static 'images/arrow-left.png' %}">
+
+                    <div id="slider">
+                        {% for image in phone.all_images.all %}
+
+                        <img class="thumbnail" src="{{ image.image.url }}">
+
+                        {% endfor %}
+                
+                    </div>
+
+                    <img id="slideRight" class="arrow" src="{% static 'images/arrow-right.png' %}">
+                </div>
+            </div>       
+            <div class="col-md-6">
+                <div class="small mb-1">
+                    <a href="{% url 'manufacturer_category' slug=phone.manufacturer.slug %}">{{ phone.manufacturer }}</a>
+                </div>
+                <h1 class="display-5 fw-bolder">{{ phone.title }}</h1>
+                <div class="fs-5 mb-5">
+                    <span>{{ phone.price }} c.</span>
+                </div>
+                <p class="lead">{{ phone.description }}</p>
+                <div class="d-flex">
+                    <a href="{% url 'add_to_cart' slug=phone.slug %}">
+                        <button class="btn btn-outline-dark flex-shrink-0" type="button">
+                            <i class="bi-cart-fill me-1"></i>
+                            Добавить в корзину
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="row gx-4 gx-lg-5 align-items-center">
+            <h3 class="text-center mb-5">Характеристики</h3>
+            {% for feature in phone.features.all %}
+            <div class="card" style="width: 18rem;">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">{{ feature.name }} : {{ feature.value }} {% if feature.unit != None %} {{ feature.unit }} {% endif %}</li>
+                </ul>
+              </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<!-- Related items section-->
+<section class="py-5 bg-light">
+    <div class="container px-4 px-lg-5 mt-5">
+        <h2 class="fw-bolder mb-4">Похожие товары</h2>
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            {% for related_phone in related_phones %}
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <!-- Product image-->
+                    <img class="card-img-top" src="{{ related_phone.image.url }}" alt="..." />
+                    <!-- Product details-->
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <!-- Product name-->
+                            <h5 class="fw-bolder">
+                                <a href="{{ related_phone.get_absolute_url }}">{{ related_phone.title }}</a>
+                            </h5>
+                            <!-- Product price-->
+                            {{ related_phone.price }}
+                        </div>
+                    </div>
+                    <!-- Product actions-->
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'add_to_cart' slug=related_phone.slug %}">Добавить в корзину</a></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    let thumbnails = document.getElementsByClassName('thumbnail')
+    let activeImages = document.getElementsByClassName('active')
+    for (var i=0; i < thumbnails.length; i++){
+        thumbnails[i].addEventListener('mouseover', function(){
+
+            if (activeImages.length > 0){
+                activeImages[0].classList.remove('active')
+            }
+        
+            this.classList.add('active')
+            document.getElementById('featured').src = this.src
+        })
+
+
+    }
+
+    const buttonRight = document.getElementById('slideRight');
+    const buttonLeft = document.getElementById('slideLeft');
+
+
+    buttonRight.addEventListener('click', function(){
+        document.getElementById('slider').scrollLeft += 180;
+    })
+
+
+
+    buttonLeft.addEventListener('click', function(){
+      document.getElementById('slider').scrollLeft -= 180;
+    })
+
+</script>
+{% endblock %}

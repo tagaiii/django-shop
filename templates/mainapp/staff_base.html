@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex" id="wrapper">
+    <!-- Sidebar-->
+    <div class="border-end bg-white" id="sidebar-wrapper">
+        <div class="sidebar-heading border-bottom bg-light text-center">Страница сотрудников</div>
+        <div class="list-group list-group-flush">
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'staff_base' %}">Главная</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{% url 'staff_registration' %}">Регистрация нового аккаунта сотрудника</a>
+        </div>
+    </div>
+    <!-- Page content wrapper-->
+    <div id="page-content-wrapper">
+        <!-- Page content-->
+        <div class="container-fluid">
+            <h1 class="mt-4">Наши сотрудники</h1>
+            <div class="row">
+                {% for staff in staffs %}
+                    <div class="card" style="width: 18rem;">
+                        <img src="..." class="card-img-top" alt="...">
+                        <div class="card-body">
+                        <h5 class="card-title">{{ staff.user.first_name }} {{ staff.user.last_name }}</h5>
+                        <a href="" class="btn btn-outline-dark">Подробнее</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JS-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+
+{% endblock %}

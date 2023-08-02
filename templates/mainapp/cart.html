@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+</head>
+<body>
+  <div class="container">
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Наименование</th>
+            <th scope="col">Изображение</th>
+            <th scope="col">Цена</th>
+            <th scope="col">Количество</th>
+            <th scope="col">Общая цена</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart.products.all %}
+          <tr>
+            <th scope="row">{{ item.product.title }}</th>
+            <td class="w-25"><img src="{{ item.product.image.url }}" class="img-fluid"></td>
+            <td>{{ item.product.price }}</td>
+            <td>
+              <form action="{% url 'change_product_qty' slug=item.product.slug %}" method="POST">
+                {% csrf_token %}
+                <input type="number" class="form-control" name="qty" min="1" value="{{ item.qty }}" style="width: 70px;">
+                <br>
+                <input type="submit" class="btn btn-outline-dark flex-shrink-0" value="Подтвердить">
+              </form>
+            </td>
+            <td>{{ item.total_price }}</td>
+            <td>
+              <a href="{% url 'delete_from_cart' slug=item.product.slug %}"><button class="btn btn-outline-danger flex-shrink-0">Удалить из корзины</button></a>
+            </td>
+          </tr>
+          {% endfor %}  
+          <tr>
+            <td colspan="3"></td>
+            <td class="fw-bolder">Итого:</td>
+            <td class="fw-bolder">{{ cart.total_price }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</body>
+{% endblock content %}
